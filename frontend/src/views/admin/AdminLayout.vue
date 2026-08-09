@@ -11,6 +11,9 @@
         <router-link v-if="multivendorEnabled" to="/admin/vendors">🏪 فروشندگان</router-link>
         <router-link to="/admin/inventory">📊 انبارداری</router-link>
         <router-link to="/admin/accounting">💰 حسابداری</router-link>
+        <router-link to="/admin/payments">🧾 پرداخت‌ها</router-link>
+        <router-link v-if="isSuperUser" to="/admin/payment-settings">💳 تنظیمات پرداخت</router-link>
+        <router-link v-if="isSuperUser" to="/admin/roles">🛡️ نقش‌ها و دسترسی‌ها</router-link>
         <router-link v-if="isSuperUser" to="/admin/roles">🛡️ نقش‌ها و دسترسی‌ها</router-link>
         <router-link to="/admin/settings">⚙️ تنظیمات</router-link>
       </nav>

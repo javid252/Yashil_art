@@ -31,7 +31,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary btn-block" :disabled="submitting">
-          {{ submitting ? "در حال ثبت سفارش..." : "ثبت نهایی سفارش" }}
+          {{ submitting ? "در حال ثبت سفارش..." : "ثبت سفارش و انتخاب روش پرداخت" }}
         </button>
       </div>
 
@@ -46,7 +46,7 @@
           <span>مجموع</span>
           <span>{{ formatPrice(subtotal) }} تومان</span>
         </div>
-        <p class="text-muted note">پرداخت به‌صورت درگاه آنلاین در نسخه بعدی فعال می‌شود؛ فعلاً سفارش با وضعیت «در حال بررسی» ثبت می‌شود.</p>
+        <p class="text-muted note">بعد از ثبت این فرم، روش پرداخت (کارت‌به‌کارت یا آنلاین) را انتخاب می‌کنید.</p>
       </aside>
     </form>
   </div>
@@ -100,8 +100,8 @@ export default {
           })),
         });
         this.$store.dispatch("cart/clearCart");
-        this.$store.dispatch("notify", { message: "سفارش شما با موفقیت ثبت شد." });
-        this.$router.push(`/order-success/${data.id}`);
+        this.$store.dispatch("notify", { message: "سفارش شما ثبت شد؛ حالا روش پرداخت را انتخاب کنید." });
+        this.$router.push(`/payment/${data.id}`);
       } catch (e) {
         this.errorMessage = "ثبت سفارش با خطا مواجه شد. لطفاً دوباره تلاش کنید.";
       } finally {

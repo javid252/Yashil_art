@@ -26,6 +26,17 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/payment/:orderId",
+    name: "payment-select",
+    component: () => import("@/views/PaymentSelect.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/payment-result",
+    name: "payment-result",
+    component: () => import("@/views/PaymentResult.vue"),
+  },
+  {
     path: "/my-orders",
     name: "my-orders",
     component: () => import("@/views/MyOrders.vue"),
@@ -84,6 +95,12 @@ const routes = [
       { path: "users", name: "admin-users", component: () => import("@/views/admin/AdminUsers.vue") },
       { path: "vendors", name: "admin-vendors", component: () => import("@/views/admin/AdminVendors.vue") },
       { path: "settings", name: "admin-settings", component: () => import("@/views/admin/AdminSettings.vue") },
+      { path: "payments", name: "admin-payments", component: () => import("@/views/admin/AdminPayments.vue") },
+      {
+        path: "payment-settings",
+        name: "admin-payment-settings",
+        component: () => import("@/views/admin/AdminPaymentSettings.vue"),
+      },
       { path: "roles", name: "admin-roles", component: () => import("@/views/admin/AdminRoles.vue") },
       { path: "inventory", name: "admin-inventory", component: () => import("@/views/admin/AdminInventory.vue") },
       { path: "accounting", name: "admin-accounting", component: () => import("@/views/admin/AdminAccounting.vue") },

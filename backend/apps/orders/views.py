@@ -48,25 +48,8 @@ class AdminOrderViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
 
         if instance.status == Order.Status.PAID:
-            self._ensure_income_transaction(instance, request.user)
+            from apps.accounting.services import ensure_income_transaction
+
+            ensure_income_transaction(instance, request.user)
 
         return Response(OrderSerializer(instance).data)
-
-    @staticmethod
-    def _ensure_income_transaction(order, user):
-        """اگر برای این سفارش قبلاً تراکنش درآمدی ثبت نشده، یکی خودکار می‌سازد."""
-        from django.utils import timezone
-
-        from apps.accounting.models import Transaction
-
-        if Transaction.objects.filter(related_order=order).exists():
-            return
-        Transaction.objects.create(
-            type=Transaction.Type.INCOME,
-            amount=order.total_price,
-            description=f"درآمد سفارش #{order.id}",
-            related_order=order,
-            is_automatic=True,
-            created_by=user,
-            occurred_at=timezone.now().date(),
-        )

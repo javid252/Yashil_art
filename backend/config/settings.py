@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "apps.access",
     "apps.inventory",
     "apps.accounting",
+    "apps.payments",
 ]
 
 MIDDLEWARE = [
@@ -192,8 +193,8 @@ if os.environ.get("SMTP_HOST"):
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-FRONTEND_RESET_PASSWORD_URL = os.environ.get(
-    "FRONTEND_RESET_PASSWORD_URL", "http://localhost:8080/reset-password"
+FRONTEND_PAYMENT_RESULT_URL = os.environ.get(
+    "FRONTEND_PAYMENT_RESULT_URL", "http://localhost:8080/payment-result"
 )
 
 # --------------------------------------------------------------------------
