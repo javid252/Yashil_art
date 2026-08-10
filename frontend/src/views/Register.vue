@@ -41,6 +41,8 @@
         {{ loading ? "در حال ثبت‌نام..." : "ثبت‌نام" }}
       </button>
 
+      <SocialAuthPanel />
+
       <p class="auth-switch">
         قبلاً ثبت‌نام کرده‌اید؟ <router-link to="/login">ورود</router-link>
       </p>
@@ -49,8 +51,11 @@
 </template>
 
 <script>
+import SocialAuthPanel from "@/components/SocialAuthPanel.vue";
+
 export default {
   name: "RegisterView",
+  components: { SocialAuthPanel },
   data() {
     return {
       form: {

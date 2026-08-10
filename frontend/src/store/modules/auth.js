@@ -64,6 +64,10 @@ export default {
       commit("SET_USER", data);
       return data;
     },
+    applySocialLogin({ commit }, data) {
+      commit("SET_AUTH", { user: data.user, access: data.access, refresh: data.refresh });
+      return data.user;
+    },
     logout({ commit }) {
       commit("CLEAR_AUTH");
       this.commit("vendor/CLEAR");

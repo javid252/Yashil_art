@@ -23,6 +23,8 @@
         {{ loading ? "در حال ورود..." : "ورود" }}
       </button>
 
+      <SocialAuthPanel />
+
       <p class="auth-switch">
         حساب کاربری ندارید؟ <router-link to="/register">ثبت‌نام کنید</router-link>
       </p>
@@ -31,8 +33,11 @@
 </template>
 
 <script>
+import SocialAuthPanel from "@/components/SocialAuthPanel.vue";
+
 export default {
   name: "LoginView",
+  components: { SocialAuthPanel },
   data() {
     return {
       form: { username: "", password: "" },

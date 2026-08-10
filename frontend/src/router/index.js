@@ -101,6 +101,11 @@ const routes = [
         name: "admin-payment-settings",
         component: () => import("@/views/admin/AdminPaymentSettings.vue"),
       },
+      {
+        path: "social-auth-settings",
+        name: "admin-social-auth-settings",
+        component: () => import("@/views/admin/AdminSocialAuthSettings.vue"),
+      },
       { path: "roles", name: "admin-roles", component: () => import("@/views/admin/AdminRoles.vue") },
       { path: "inventory", name: "admin-inventory", component: () => import("@/views/admin/AdminInventory.vue") },
       { path: "accounting", name: "admin-accounting", component: () => import("@/views/admin/AdminAccounting.vue") },
