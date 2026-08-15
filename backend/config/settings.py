@@ -1,5 +1,5 @@
 """
-تنظیمات پروژه فروشگاه کاوان (Kaavan Shop)
+تنظیمات پروژه فروشگاه یاشیل آرت (Yashil Art Shop)
 Django 4.2 + DRF + SimpleJWT
 دیتابیس: SQLite در توسعه محلی / PostgreSQL روی Render (از طریق DATABASE_URL)
 """

@@ -74,7 +74,7 @@ class PasswordResetRequestView(APIView):
             token = default_token_generator.make_token(user)
             reset_link = f"{settings.FRONTEND_RESET_PASSWORD_URL}/{uid}/{token}"
             send_mail(
-                subject="بازیابی رمز عبور فروشگاه کاوان",
+                subject="بازیابی رمز عبور فروشگاه یاشیل آرت",
                 message=f"برای بازیابی رمز عبور خود روی لینک زیر کلیک کنید:\n{reset_link}",
                 from_email="no-reply@kaavan-shop.local",
                 recipient_list=[email],

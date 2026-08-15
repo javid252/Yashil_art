@@ -1,4 +1,4 @@
-# فروشگاه کاوان (Kaavan Shop)
+# فروشگاه یاشیل آرت (Yashil Art Shop)
 
 سامانه فروشگاهی MVP با معماری جداسازی‌شده: بک‌اند Django REST Framework + فرانت‌اند Vue 2.
 

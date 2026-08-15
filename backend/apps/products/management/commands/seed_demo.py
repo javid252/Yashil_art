@@ -28,7 +28,7 @@ class Command(BaseCommand):
         sample_products = [
             ("پیراهن کتان مردانه", "پوشاک", 890000, 690000, True),
             ("کفش اسپرت سفید", "کیف و کفش", 1250000, None, True),
-            ("هدفون بی‌سیم کاوان", "لوازم دیجیتال", 2450000, 1990000, True),
+            ("هدفون بی‌سیم یاشیل آرت", "لوازم دیجیتال", 2450000, 1990000, True),
             ("قابلمه استیل ۵ لیتری", "خانه و آشپزخانه", 1580000, None, False),
             ("ست مراقبت پوست", "زیبایی و سلامت", 720000, 590000, True),
             ("کیف دستی چرم زنانه", "کیف و کفش", 1340000, None, False),
@@ -40,7 +40,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "category": categories[cat_name],
-                    "description": f"{name} با کیفیت بالا و ارسال سریع از فروشگاه کاوان.",
+                    "description": f"{name} با کیفیت بالا و ارسال سریع از فروشگاه یاشیل آرت.",
                     "price": price,
                     "discount_price": discount,
                     "stock": 25,
