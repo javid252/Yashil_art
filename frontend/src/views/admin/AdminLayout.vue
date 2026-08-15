@@ -6,6 +6,7 @@
         <router-link to="/admin/dashboard">📊 داشبورد</router-link>
         <router-link to="/admin/products">📦 محصولات</router-link>
         <router-link to="/admin/categories">🗂️ دسته‌بندی‌ها</router-link>
+        <router-link to="/admin/hero-slides">🖼️ اسلایدر صفحه اصلی</router-link>
         <router-link to="/admin/orders">🧾 سفارش‌ها</router-link>
         <router-link to="/admin/users">👥 کاربران</router-link>
         <router-link v-if="multivendorEnabled" to="/admin/vendors">🏪 فروشندگان</router-link>

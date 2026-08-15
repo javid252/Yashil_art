@@ -81,6 +81,7 @@ const routes = [
       { path: "dashboard", name: "admin-dashboard", component: () => import("@/views/admin/AdminDashboard.vue") },
       { path: "products", name: "admin-products", component: () => import("@/views/admin/AdminProducts.vue") },
       { path: "categories", name: "admin-categories", component: () => import("@/views/admin/AdminCategories.vue") },
+      { path: "hero-slides", name: "admin-hero-slides", component: () => import("@/views/admin/AdminHeroSlides.vue") },
       {
         path: "products/new",
         name: "admin-product-new",

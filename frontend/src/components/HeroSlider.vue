@@ -1,10 +1,10 @@
 <template>
-  <section class="hero-slider">
+  <section v-if="slides.length" class="hero-slider">
     <div class="slider-container">
       <!-- اسلایدها با کراس فید -->
       <div
         v-for="(slide, index) in slides"
-        :key="index"
+        :key="slide.id"
         class="slide"
         :class="{
           'slide-active': index === currentIndex,
@@ -19,16 +19,26 @@
         <div class="slide-content">
           <div class="container hero-container">
             <div class="hero-content">
-              <span class="eyebrow">{{ slide.label }}</span>
+              <span v-if="slide.label" class="eyebrow">{{ slide.label }}</span>
               <h1>{{ slide.title }}</h1>
-              <p>{{ slide.description }}</p>
+              <p v-if="slide.description">{{ slide.description }}</p>
               <div class="hero-actions">
-                <router-link :to="slide.primaryLink" class="btn btn-accent">
-                  {{ slide.primaryText }}
-                </router-link>
-                <router-link :to="slide.secondaryLink" class="btn btn-outline">
-                  {{ slide.secondaryText }}
-                </router-link>
+                <template v-if="slide.primary_button_text">
+                  <a v-if="isExternalLink(slide.primary_button_link)" :href="slide.primary_button_link" class="btn btn-accent" target="_blank" rel="noopener">
+                    {{ slide.primary_button_text }}
+                  </a>
+                  <router-link v-else :to="slide.primary_button_link || '/'" class="btn btn-accent">
+                    {{ slide.primary_button_text }}
+                  </router-link>
+                </template>
+                <template v-if="slide.secondary_button_text">
+                  <a v-if="isExternalLink(slide.secondary_button_link)" :href="slide.secondary_button_link" class="btn btn-outline" target="_blank" rel="noopener">
+                    {{ slide.secondary_button_text }}
+                  </a>
+                  <router-link v-else :to="slide.secondary_button_link || '/'" class="btn btn-outline">
+                    {{ slide.secondary_button_text }}
+                  </router-link>
+                </template>
               </div>
             </div>
           </div>
@@ -37,21 +47,25 @@
     </div>
 
     <!-- Controls -->
-    <button class="slider-prev" @click="previous">‹</button>
-    <button class="slider-next" @click="next">›</button>
+    <template v-if="slides.length > 1">
+      <button class="slider-prev" @click="previous">‹</button>
+      <button class="slider-next" @click="next">›</button>
 
-    <div class="slider-dots">
-      <button
-        v-for="(item, index) in slides"
-        :key="index"
-        :class="{ active: index === currentIndex }"
-        @click="goTo(index)"
-      ></button>
-    </div>
+      <div class="slider-dots">
+        <button
+          v-for="(item, index) in slides"
+          :key="item.id"
+          :class="{ active: index === currentIndex }"
+          @click="goTo(index)"
+        ></button>
+      </div>
+    </template>
   </section>
 </template>
 
 <script>
+import api from "@/services/api";
+
 export default {
   name: "HeroSlider",
 
@@ -61,44 +75,27 @@ export default {
       exitIndex: null,
       direction: "next",
       timer: null,
-
-      slides: [
-        {
-          image: "/images/83-1920x800.jpg",
-          label: "فروشگاه یاشیل آرت",
-          title: "هر خرید، آغاز یک مسیر مطمئن",
-          description: "از محصولات منتخب تا تجربه خرید آسان؛ کاوان همراه شماست.",
-          primaryText: "مشاهده محصولات",
-          primaryLink: "/products",
-          secondaryText: "پیشنهاد ویژه",
-          secondaryLink: "/products?featured=1",
-        },
-        {
-          image: "/images/516-1920x800.jpg",
-          label: "پیشنهاد ویژه",
-          title: "بهترین محصولات با بهترین قیمت",
-          description: "تخفیف‌های ویژه را از دست ندهید.",
-          primaryText: "مشاهده تخفیف‌ها",
-          primaryLink: "/products?has_discount=1",
-          secondaryText: "محصولات جدید",
-          secondaryLink: "/products",
-        },
-        {
-          image: "/images/83-1920x800.jpg",
-          label: "جدیدترین ها",
-          title: "با جدیدترین محصولات آشنا شوید",
-          description: "هر هفته محصولات جدید و متنوع به فروشگاه اضافه می‌شود.",
-          primaryText: "مشاهده جدیدها",
-          primaryLink: "/products?new=1",
-          secondaryText: "همه محصولات",
-          secondaryLink: "/products",
-        },
-      ],
+      slides: [],
     };
   },
 
+  async created() {
+    try {
+      const { data } = await api.get("/content/hero-slides/");
+      this.slides = data.results || data;
+    } catch (e) {
+      this.slides = [];
+    }
+  },
+
   mounted() {
-    this.startSlider();
+    this.$watch(
+      "slides",
+      (slides) => {
+        if (slides.length > 1) this.startSlider();
+      },
+      { immediate: true }
+    );
   },
 
   beforeDestroy() {
@@ -106,6 +103,9 @@ export default {
   },
 
   methods: {
+    isExternalLink(link) {
+      return !!link && /^https?:\/\//.test(link);
+    },
     next() {
       this.direction = "next";
       this.exitIndex = this.currentIndex;
@@ -127,6 +127,7 @@ export default {
     },
 
     startSlider() {
+      clearInterval(this.timer);
       this.timer = setInterval(() => {
         this.next();
       }, 5000);
@@ -161,14 +162,12 @@ export default {
   transition: opacity 0.8s ease, visibility 0.8s ease;
 }
 
-/* اسلاید فعال - کاملاً مشخص */
 .slide-active {
   opacity: 1;
   visibility: visible;
   z-index: 2;
 }
 
-/* اسلاید در حال خروج - همزمان با ورود جدید محو میشه */
 .slide-exit {
   opacity: 0;
   visibility: hidden;
@@ -191,12 +190,10 @@ export default {
   transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* تصویر اسلاید فعال - از راست به چپ میاد */
 .slide-active .slide-bg img {
   transform: translateX(0);
 }
 
-/* تصویر اسلاید خارج شونده - با جهت حرکت خارج میشه */
 .slide-exit .slide-bg img {
   transform: translateX(var(--exit-direction, -100%));
 }
@@ -235,7 +232,6 @@ export default {
   transition: all 0.6s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* تاخیرهای پلکانی - نوشته‌ها با تاخیر میان */
 .slide-active .hero-content .eyebrow {
   transition-delay: 0.3s;
   opacity: 1;
