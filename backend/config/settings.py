@@ -1,30 +1,142 @@
 """
 تنظیمات پروژه فروشگاه یاشیل آرت (Yashil Art Shop)
 Django 4.2 + DRF + SimpleJWT
-دیتابیس: SQLite در توسعه محلی / PostgreSQL روی Render (از طریق DATABASE_URL)
+
+Development:
+    SQLite
+
+Production:
+    MariaDB / MySQL
 """
+
 import os
 from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
+from dotenv import load_dotenv
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get(
-    "DJANGO_SECRET_KEY",
-    "dev-secret-key-change-me-in-production-6b2f8a1e4c9d",
+
+# ============================================================
+# Environment
+# ============================================================
+
+# Load local .env if it exists.
+#
+# IMPORTANT:
+# override=False means that real environment variables
+# supplied by the server/cPanel have priority over .env.
+#
+load_dotenv(BASE_DIR / ".env", override=False)
+
+
+DJANGO_ENV = os.environ.get("DJANGO_ENV", "development").strip().lower()
+
+if DJANGO_ENV not in ("development", "production"):
+    raise RuntimeError(
+        "DJANGO_ENV must be either 'development' or 'production'"
+    )
+
+
+IS_PRODUCTION = DJANGO_ENV == "production"
+
+
+# ============================================================
+# Security
+# ============================================================
+
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+
+if IS_PRODUCTION and not SECRET_KEY:
+    raise RuntimeError(
+        "DJANGO_SECRET_KEY must be set in production."
+    )
+
+if not SECRET_KEY:
+    SECRET_KEY = "dev-only-secret-key-change-this"
+
+
+# ============================================================
+# Debug
+# ============================================================
+
+DEBUG_DEFAULT = "0" if IS_PRODUCTION else "1"
+
+DEBUG = (
+    os.environ.get("DJANGO_DEBUG", DEBUG_DEFAULT).strip() == "1"
 )
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
 
-# روی Render نام هاست به‌صورت خودکار در RENDER_EXTERNAL_HOSTNAME قرار می‌گیرد
-ALLOWED_HOSTS = [h.strip() for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") if h.strip()]
-RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-if DEBUG or not ALLOWED_HOSTS:
-    ALLOWED_HOSTS = ALLOWED_HOSTS or ["*"]
+# ============================================================
+# Allowed Hosts
+# ============================================================
+
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get(
+        "DJANGO_ALLOWED_HOSTS", ""
+    ).split(",")
+    if host.strip()
+]
+
+
+# Production must have explicit hosts.
+if IS_PRODUCTION and not ALLOWED_HOSTS:
+    raise RuntimeError(
+        "DJANGO_ALLOWED_HOSTS must be set in production."
+    )
+
+
+# ============================================================
+# Database
+# ============================================================
+
+DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+
+DATABASE_SSL_REQUIRE = (
+    os.environ.get(
+        "DATABASE_SSL_REQUIRE",
+        "0",
+    ).strip()
+    == "1"
+)
+
+
+if DATABASE_URL:
+
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=DATABASE_SSL_REQUIRE,
+        )
+    }
+
+    # Ensure proper Unicode support for Persian text.
+    DATABASES["default"].setdefault("OPTIONS", {})
+    DATABASES["default"]["OPTIONS"]["charset"] = "utf8mb4"
+
+
+elif IS_PRODUCTION:
+
+    # Never silently fall back to SQLite in production.
+    raise RuntimeError(
+        "DATABASE_URL must be set in production."
+    )
+
+
+else:
+
+    # Development only
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # --------------------------------------------------------------------------
 # Apps
@@ -88,24 +200,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
-# --------------------------------------------------------------------------
-# Database
-# در محیط محلی: SQLite (پیش‌فرض). روی Render: DATABASE_URL توسط سرویس
-# PostgreSQL تعریف‌شده در render.yaml به‌صورت خودکار تزریق می‌شود.
-# --------------------------------------------------------------------------
-DATABASE_URL = os.environ.get("DATABASE_URL")
-if DATABASE_URL:
-    DATABASES = {
-        "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
-
 AUTH_USER_MODEL = "accounts.User"
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -125,7 +219,7 @@ USE_TZ = True
 # --------------------------------------------------------------------------
 # فایل‌های استاتیک - WhiteNoise (بدون نیاز به Nginx/CDN جداگانه روی Render)
 # --------------------------------------------------------------------------
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
@@ -137,25 +231,37 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# --------------------------------------------------------------------------
-# CORS / CSRF - آدرس فرانت‌اند (dev + دامنه Render) از env خوانده می‌شود
-# --------------------------------------------------------------------------
+# ============================================================
+# CORS / CSRF
+# ============================================================
+
 _default_origins = [
     "http://localhost:8080",
-    "http://192.168.1.2:8080",
     "http://127.0.0.1:8080",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
-_extra_origins = [o.strip() for o in os.environ.get("FRONTEND_URL", "").split(",") if o.strip()]
 
-CORS_ALLOWED_ORIGINS = _default_origins + _extra_origins
-CORS_ALLOW_CREDENTIALS = True
+_extra_origins = [
+    origin.strip()
+    for origin in os.environ.get(
+        "FRONTEND_URL",
+        "",
+    ).split(",")
+    if origin.strip()
+]
 
-CSRF_TRUSTED_ORIGINS = _extra_origins + (
-    [f"https://{RENDER_EXTERNAL_HOSTNAME}"] if RENDER_EXTERNAL_HOSTNAME else []
+CORS_ALLOWED_ORIGINS = list(
+    dict.fromkeys(
+        _default_origins + _extra_origins
+    )
 )
 
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = list(
+    dict.fromkeys(_extra_origins)
+)
 # --------------------------------------------------------------------------
 # Django REST Framework
 # --------------------------------------------------------------------------
@@ -195,16 +301,37 @@ else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 FRONTEND_PAYMENT_RESULT_URL = os.environ.get(
-    "FRONTEND_PAYMENT_RESULT_URL", "http://localhost:8080/payment-result"
+    "FRONTEND_PAYMENT_RESULT_URL",
+    "http://localhost:8080/payment-result",
 )
 
-# --------------------------------------------------------------------------
-# امنیت در محیط پروداکشن (Render همیشه پشت HTTPS/پراکسی است)
-# --------------------------------------------------------------------------
-if not DEBUG:
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "1") == "1"
+FRONTEND_RESET_PASSWORD_URL = os.environ.get(
+    "FRONTEND_RESET_PASSWORD_URL",
+    "http://localhost:8080/reset-password",
+)
+
+
+# ============================================================
+# Production Security
+# ============================================================
+
+if IS_PRODUCTION:
+
+    SECURE_PROXY_SSL_HEADER = (
+        "HTTP_X_FORWARDED_PROTO",
+        "https",
+    )
+
+    SECURE_SSL_REDIRECT = (
+        os.environ.get(
+            "DJANGO_SECURE_SSL_REDIRECT",
+            "0",
+        ).strip()
+        == "1"
+    )
+
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 60 * 60 * 24 * 7  # یک هفته؛ بعد از اطمینان از HTTPS پایدار می‌توان افزایش داد
+
+    SECURE_HSTS_SECONDS = 60 * 60 * 24 * 7
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True

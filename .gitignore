@@ -1,14 +1,46 @@
+# ============================================================
 # Python / Django
+# ============================================================
+
 __pycache__/
-*.pyc
-db.sqlite3
-staticfiles/
-media/products/
+*.py[cod]
+*$py.class
+
 .venv/
 venv/
+env/
 
+# Environment files
+.env
+.env.*
+!.env.example
+
+# SQLite
+db.sqlite3
+db.sqlite3-journal
+
+# Django static files
+staticfiles/
+
+# Media generated/uploaded files
+media/products/
+
+# Logs
+*.log
+
+
+# ============================================================
 # Node / Vue
+# ============================================================
+
 node_modules/
 dist/
+
+# Environment files for Vue
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Misc
 .DS_Store
-*.log
+Thumbs.db
