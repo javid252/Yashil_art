@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
 
+from apps.common.file_uploads import vendor_logo_upload_to
+
 
 class PlatformSettings(models.Model):
     """
@@ -46,7 +48,7 @@ class Vendor(models.Model):
     store_name = models.CharField("نام فروشگاه", max_length=150)
     store_slug = models.SlugField("اسلاگ فروشگاه", max_length=170, unique=True, blank=True)
     description = models.TextField("توضیحات فروشگاه", blank=True)
-    logo = models.ImageField("لوگو", upload_to="vendors/logos/", null=True, blank=True)
+    logo = models.ImageField("لوگو", upload_to=vendor_logo_upload_to, null=True, blank=True)
     status = models.CharField("وضعیت", max_length=20, choices=Status.choices, default=Status.PENDING)
     commission_percent = models.DecimalField(
         "درصد کارمزد اختصاصی (اختیاری)", max_digits=5, decimal_places=2, null=True, blank=True,

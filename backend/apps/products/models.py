@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils.text import slugify
 
+from apps.common.file_uploads import product_image_upload_to
+from apps.common.file_uploads import category_image_upload_to
+
 
 class Category(models.Model):
     name = models.CharField("نام دسته", max_length=100)
@@ -14,7 +17,7 @@ class Category(models.Model):
         help_text="مثلا 📦 یا نام آیکون - اگر تصویر آپلود نشود، همین نمایش داده می‌شود",
     )
     image = models.ImageField(
-        "تصویر دسته‌بندی", upload_to="categories/", null=True, blank=True,
+        "تصویر دسته‌بندی", upload_to= category_image_upload_to, null=True, blank=True,
     )
     is_active = models.BooleanField("فعال / قابل نمایش", default=True)
     order = models.PositiveIntegerField("ترتیب نمایش", default=0)
@@ -92,7 +95,7 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name="images", on_delete=models.CASCADE)
-    image = models.ImageField("تصویر", upload_to="products/")
+    image = models.ImageField("تصویر", upload_to=product_image_upload_to,)
     is_main = models.BooleanField("تصویر اصلی", default=False)
     order = models.PositiveIntegerField("ترتیب نمایش", default=0)
 

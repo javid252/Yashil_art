@@ -132,7 +132,7 @@ export default {
     async fetchProduct() {
       this.loading = true;
       try {
-        const { data } = await api.get(`/products/${this.$route.params.slug}/`);
+        const { data } = await api.get(`/products/${this.$route.params.id}/`);
         this.product = data;
         const main = data.images.find((i) => i.is_main) || data.images[0];
         this.activeImage = main ? main.image : null;

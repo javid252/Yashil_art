@@ -22,3 +22,10 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+#  path('', views, HomePage.as_view(), name='homepage'),
+#  path('category/<<category>/', view.categoryList.as_view(), name='categories'),
+#  path('product/<int:pk>/<str:slug>/', views.productDetail.as_view(), name='product_detail'),
+#  re_path(r'^product/(?p<pk>\d+)/(?p<slug>[^/]+)/$,views.productDetail.as_view(),name='product_detail'),    

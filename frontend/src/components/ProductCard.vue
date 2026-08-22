@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="`/products/${product.slug}`" class="product-card card">
+  <router-link :to="`/products/${product.id}/${product.slug}`" class="product-card card">
     <div class="product-card__image-wrap">
       <img
         v-if="product.main_image"

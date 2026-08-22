@@ -34,7 +34,7 @@
               </span>
             </td>
             <td class="actions-cell">
-              <router-link :to="`/admin/products/${p.slug}/edit`" class="btn btn-outline btn-sm">ویرایش</router-link>
+              <router-link :to="`/admin/products/${p.id}/edit`" class="btn btn-outline btn-sm">ویرایش</router-link>
               <button class="btn btn-danger btn-sm" @click="remove(p)">حذف</button>
             </td>
           </tr>
@@ -78,7 +78,7 @@ export default {
     async remove(product) {
       if (!confirm(`محصول «${product.name}» حذف شود؟`)) return;
       try {
-        await api.delete(`/products/${product.slug}/`);
+        await api.delete(`/products/${product.id}/`);
         this.$store.dispatch("notify", { message: "محصول حذف شد." });
         this.fetchProducts();
       } catch (e) {

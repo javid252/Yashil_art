@@ -8,7 +8,7 @@ Vue.use(VueRouter);
 const routes = [
   { path: "/", name: "home", component: () => import("@/views/Home.vue") },
   { path: "/products", name: "product-list", component: () => import("@/views/ProductList.vue") },
-  { path: "/products/:slug", name: "product-detail", component: () => import("@/views/ProductDetail.vue") },
+  { path: "/products/:id/:slug", name: "product-detail", component: () => import("@/views/ProductDetail.vue") },
   { path: "/cart", name: "cart", component: () => import("@/views/Cart.vue") },
   { path: "/contact", name: "contact", component: () => import("@/views/Contact.vue") },
   { path: "/stores", name: "store-list", component: () => import("@/views/VendorStoreList.vue") },
@@ -88,7 +88,7 @@ const routes = [
         component: () => import("@/views/admin/AdminProductForm.vue"),
       },
       {
-        path: "products/:slug/edit",
+        path: "products/:id/edit",
         name: "admin-product-edit",
         component: () => import("@/views/admin/AdminProductForm.vue"),
       },
@@ -126,7 +126,7 @@ const routes = [
         component: () => import("@/views/vendor/VendorProductForm.vue"),
       },
       {
-        path: "products/:slug/edit",
+        path: "products/:id/edit",
         name: "vendor-product-edit",
         component: () => import("@/views/vendor/VendorProductForm.vue"),
       },

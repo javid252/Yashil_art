@@ -44,3 +44,16 @@ frontend/.env.*
 # Misc
 .DS_Store
 Thumbs.db
+
+# Django media
+backend/media/
+
+# Vue build
+frontend/build-output/
+
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/

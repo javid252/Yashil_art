@@ -1,10 +1,11 @@
 from django.db import models
+from apps.common.file_uploads import hero_slide_image_upload_to
 
 
 class HeroSlide(models.Model):
     """یک اسلاید از اسلایدر هیرو در صفحه اصلی - هرکدام از فیلدها جدا از پنل ادمین قابل ویرایش است."""
 
-    image = models.ImageField("تصویر", upload_to="hero-slides/")
+    image = models.ImageField("تصویر", upload_to=hero_slide_image_upload_to,)
     label = models.CharField("لیبل بالای عنوان", max_length=100, blank=True)
     title = models.CharField("متن بزرگ (تیتر)", max_length=200)
     description = models.TextField("متن کوچک (توضیح)", blank=True)

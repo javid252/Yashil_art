@@ -111,14 +111,14 @@ export default {
   },
   computed: {
     isEdit() {
-      return !!this.$route.params.slug;
+      return !!this.$route.params.id;
     },
   },
   created() {
     this.loadForm();
   },
   watch: {
-    "$route.params.slug"() {
+    "$route.params.id"() {
       this.loadForm();
     },
   },
@@ -131,7 +131,7 @@ export default {
         this.categories = data.results || data;
 
         if (this.isEdit) {
-          const { data: product } = await api.get(`/products/${this.$route.params.slug}/`);
+          const { data: product } = await api.get(`/products/${this.$route.params.id}/`);
           this.productId = product.id;
           this.images = product.images;
           this.form = {
@@ -165,13 +165,13 @@ export default {
       this.errorMessage = "";
       try {
         if (this.isEdit) {
-          await api.patch(`/products/${this.$route.params.slug}/`, this.form);
+          await api.patch(`/products/${this.$route.params.id}/`, this.form);
           this.$store.dispatch("notify", { message: "محصول با موفقیت به‌روزرسانی شد." });
         } else {
           const { data } = await api.post("/products/", this.form);
           this.productId = data.id;
           this.$store.dispatch("notify", { message: "محصول ثبت شد؛ حالا می‌توانید تصویر اضافه کنید." });
-          this.$router.replace(`/admin/products/${data.slug}/edit`);
+          this.$router.replace(`/admin/products/${data.id}/edit`);
           return;
         }
         this.$router.push("/admin/products");
