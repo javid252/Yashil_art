@@ -43,6 +43,18 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/my-invoices",
+    name: "my-invoices",
+    component: () => import("@/views/MyInvoices.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/my-invoices/:id",
+    name: "my-invoice-detail",
+    component: () => import("@/views/InvoiceDetail.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/login",
     name: "login",
     component: () => import("@/views/Login.vue"),
@@ -110,6 +122,7 @@ const routes = [
       { path: "roles", name: "admin-roles", component: () => import("@/views/admin/AdminRoles.vue") },
       { path: "inventory", name: "admin-inventory", component: () => import("@/views/admin/AdminInventory.vue") },
       { path: "accounting", name: "admin-accounting", component: () => import("@/views/admin/AdminAccounting.vue") },
+      { path: "invoices", name: "admin-invoices", component: () => import("@/views/admin/AdminInvoices.vue") },
     ],
   },
   {

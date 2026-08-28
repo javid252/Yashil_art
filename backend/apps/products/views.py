@@ -1,8 +1,9 @@
 from django.db.models import Count
 from django_filters import rest_framework as django_filters
-from rest_framework import viewsets
+from rest_framework import viewsets, generics, permissions, status
+from rest_framework.response import Response
 
-from .models import Category, Product, ProductImage, ProductVariant
+from .models import Category, Product, ProductImage, ProductVariant, Review
 from .permissions import CanManageProductRelated, IsAdminOrReadOnly, IsAdminOrVendorOwner
 from .serializers import (
     CategorySerializer,
@@ -11,6 +12,7 @@ from .serializers import (
     ProductListSerializer,
     ProductVariantSerializer,
     ProductWriteSerializer,
+    ReviewSerializer,
 )
 
 
@@ -105,3 +107,36 @@ class ProductVariantViewSet(viewsets.ModelViewSet):
             return qs
         vendor = getattr(user, "vendor_profile", None)
         return qs.filter(product__vendor=vendor) if vendor else qs.none()
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    serializer_class = ReviewSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        qs = Review.objects.select_related("user", "product")
+        product_id = self.request.query_params.get("product")
+        if product_id:
+            qs = qs.filter(product_id=product_id, is_approved=True)
+        return qs
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class SimilarProductsView(generics.ListAPIView):
+    serializer_class = ProductListSerializer
+
+    def get_queryset(self):
+        product_id = self.kwargs.get("pk")
+        try:
+            product = Product.objects.get(pk=product_id)
+        except Product.DoesNotExist:
+            return Product.objects.none()
+        return (
+            Product.objects
+            .filter(category=product.category, is_active=True)
+            .exclude(pk=product.id)
+            .select_related("category", "vendor")
+            .prefetch_related("images")[:6]
+        )

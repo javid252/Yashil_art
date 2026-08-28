@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.text import slugify
 
@@ -126,3 +128,38 @@ class ProductVariant(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.attribute_name}: {self.value}"
+
+
+class Review(models.Model):
+    """نظر و امتیاز کاربران به محصول."""
+
+    product = models.ForeignKey(
+        Product, verbose_name="محصول", related_name="reviews",
+        on_delete=models.CASCADE,
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, verbose_name="کاربر", related_name="reviews",
+        on_delete=models.CASCADE,
+    )
+    rating = models.PositiveSmallIntegerField(
+        "امتیاز",
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+    )
+    title = models.CharField("عنوان نظر", max_length=150, blank=True)
+    comment = models.TextField("متن نظر")
+    is_approved = models.BooleanField("تأیید شده", default=True)
+    created_at = models.DateTimeField("تاریخ ثبت", auto_now_add=True)
+    updated_at = models.DateTimeField("آخرین ویرایش", auto_now=True)
+
+    class Meta:
+        verbose_name = "نظر"
+        verbose_name_plural = "نظرات"
+        ordering = ["-created_at"]
+        unique_together = [("product", "user")]
+
+    def __str__(self):
+        return f"{self.user} - {self.product.name} ({self.rating}/5)"
+
+    @property
+    def user_display_name(self):
+        return self.user.get_full_name() or self.user.username

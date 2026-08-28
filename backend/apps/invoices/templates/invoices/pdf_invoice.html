@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4;
+            margin: 15mm 12mm;
+        }
+
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            font-size: 11px;
+            color: #1a1a2e;
+            line-height: 1.5;
+            direction: rtl;
+        }
+
+        .invoice-container {
+            width: 100%;
+        }
+
+        /* هدر فاکتور */
+        .header-table {
+            width: 100%;
+            border-bottom: 3px solid #16a085;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+        }
+
+        .header-right {
+            text-align: right;
+            width: 60%;
+        }
+
+        .header-left {
+            text-align: left;
+            width: 40%;
+        }
+
+        .shop-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #16a085;
+            margin-bottom: 4px;
+        }
+
+        .shop-info {
+            font-size: 10px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .invoice-badge {
+            background-color: #16a085;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .invoice-number {
+            font-size: 12px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .invoice-date {
+            font-size: 10px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        /* بخش اطلاعات */
+        .info-table {
+            width: 100%;
+            margin-bottom: 18px;
+        }
+
+        .info-box {
+            width: 48%;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 10px 12px;
+            vertical-align: top;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: bold;
+            color: #16a085;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .info-row {
+            font-size: 10px;
+            margin-bottom: 3px;
+        }
+
+        .info-label {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .info-value {
+            color: #333;
+        }
+
+        .status-badge {
+            background-color: #27ae60;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* جدول آیتم‌ها */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+            font-size: 10px;
+        }
+
+        .items-table thead th {
+            background-color: #16a085;
+            color: white;
+            padding: 8px 6px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        .items-table tbody td {
+            padding: 7px 6px;
+            border-bottom: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .items-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+        .text-center { text-align: center; }
+
+        /* خلاصه مالی */
+        .summary-table {
+            width: 280px;
+            margin-left: 0;
+            margin-bottom: 15px;
+        }
+
+        .summary-table td {
+            padding: 5px 10px;
+            font-size: 11px;
+        }
+
+        .subtotal-row td {
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .total-row td {
+            background-color: #16a085;
+            color: white;
+            font-weight: bold;
+            font-size: 13px;
+            border-radius: 4px;
+        }
+
+        /* یادداشت */
+        .notes-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-top: 12px;
+            font-size: 10px;
+            color: #856404;
+        }
+
+        /* بارکد */
+        .barcode {
+            text-align: center;
+            margin-top: 12px;
+            font-family: monospace;
+            font-size: 13px;
+            color: #333;
+            letter-spacing: 2px;
+        }
+
+        /* فوتر */
+        .footer {
+            margin-top: 25px;
+            padding-top: 12px;
+            border-top: 2px solid #16a085;
+            text-align: center;
+        }
+
+        .footer-note {
+            font-size: 9px;
+            color: #888;
+            line-height: 1.8;
+        }
+
+        .footer-contact {
+            font-size: 10px;
+            color: #555;
+            margin-top: 6px;
+        }
+
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+
+        <!-- هدر -->
+        <table class="header-table" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="header-right">
+                    <div class="shop-name">&#127807; یاشیل آرت</div>
+                    <div class="shop-info">
+                        فروشگاه آنلاین محصولات هنری<br>
+                        yashilartshop.ir
+                    </div>
+                </td>
+                <td class="header-left">
+                    <div class="invoice-badge">فاکتور فروش</div>
+                    <br>
+                    <div class="invoice-number">شماره: {{ invoice.invoice_number }}</div>
+                    <div class="invoice-date">تاریخ صدور: {{ invoice.issued_at|date:"Y/m/d H:i" }}</div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- اطلاعات خریدار و وضعیت -->
+        <table class="info-table" cellpadding="0" cellspacing="8">
+            <tr>
+                <td class="info-box">
+                    <div class="section-title">اطلاعات خریدار</div>
+                    <div class="info-row">
+                        <span class="info-label">نام: </span>
+                        <span class="info-value">{{ invoice.buyer_full_name }}</span>
+                    </div>
+                    {% if invoice.buyer_phone %}
+                    <div class="info-row">
+                        <span class="info-label">تلفن: </span>
+                        <span class="info-value">{{ invoice.buyer_phone }}</span>
+                    </div>
+                    {% endif %}
+                    {% if invoice.buyer_email %}
+                    <div class="info-row">
+                        <span class="info-label">ایمیل: </span>
+                        <span class="info-value">{{ invoice.buyer_email }}</span>
+                    </div>
+                    {% endif %}
+                    {% if invoice.buyer_address %}
+                    <div class="info-row">
+                        <span class="info-label">آدرس: </span>
+                        <span class="info-value">{{ invoice.buyer_address }}</span>
+                    </div>
+                    {% endif %}
+                    {% if invoice.buyer_postal_code %}
+                    <div class="info-row">
+                        <span class="info-label">کد پستی: </span>
+                        <span class="info-value">{{ invoice.buyer_postal_code }}</span>
+                    </div>
+                    {% endif %}
+                </td>
+                <td class="info-box">
+                    <div class="section-title">وضعیت فاکتور</div>
+                    <div class="info-row">
+                        <span class="info-label">شماره سفارش: </span>
+                        <span class="info-value">#{{ invoice.order_id }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">تاریخ ثبت سفارش: </span>
+                        <span class="info-value">{{ invoice.order.created_at|date:"Y/m/d H:i" }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">وضعیت: </span>
+                        <span class="status-badge">{{ invoice.get_status_display }}</span>
+                    </div>
+                    {% if invoice.email_sent %}
+                    <div class="info-row">
+                        <span class="info-label">ارسال ایمیل: </span>
+                        <span class="info-value">&#10004; {{ invoice.email_sent_at|date:"Y/m/d H:i" }}</span>
+                    </div>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+
+        <!-- جدول آیتم‌ها -->
+        <table class="items-table" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">#</th>
+                    <th style="width: 35%; text-align: right;">نام محصول</th>
+                    <th style="width: 15%;">مشخصات</th>
+                    <th style="width: 15%;">قیمت واحد</th>
+                    <th style="width: 10%;">تعداد</th>
+                    <th style="width: 20%;">جمع ردیف</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td class="text-right">{{ item.product_name }}</td>
+                    <td>{% if item.variant_label %}{{ item.variant_label }}{% else %}-{% endif %}</td>
+                    <td>{{ item.formatted_unit_price }} تومان</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.formatted_line_total_after_discount }} تومان</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- خلاصه مالی -->
+        <table class="summary-table" cellpadding="0" cellspacing="0">
+            <tr class="subtotal-row">
+                <td>جمع آیتم‌ها:</td>
+                <td class="text-left">{{ invoice.subtotal|intcomma }} تومان</td>
+            </tr>
+            {% if invoice.discount_total > 0 %}
+            <tr class="subtotal-row">
+                <td>تخفیف:</td>
+                <td class="text-left">-{{ invoice.discount_total|intcomma }} تومان</td>
+            </tr>
+            {% endif %}
+            {% if invoice.tax_total > 0 %}
+            <tr class="subtotal-row">
+                <td>مالیات:</td>
+                <td class="text-left">{{ invoice.tax_total|intcomma }} تومان</td>
+            </tr>
+            {% endif %}
+            <tr class="total-row">
+                <td>مبلغ نهایی:</td>
+                <td class="text-left">{{ invoice.formatted_grand_total }} تومان</td>
+            </tr>
+        </table>
+
+        {% if invoice.notes %}
+        <div class="notes-box">
+            <strong>&#128221; یادداشت:</strong> {{ invoice.notes }}
+        </div>
+        {% endif %}
+
+        <!-- بارکد شماره فاکتور -->
+        <div class="barcode">
+            |{{ invoice.invoice_number }}|
+        </div>
+
+        <!-- فوتر -->
+        <div class="footer">
+            <div class="footer-note">
+                این فاکتور به‌صورت خودکار توسط سامانه فروشگاه یاشیل آرت صادر شده است.<br>
+                برای هرگونه سؤال یا پیگیری سفارش، لطفاً با ما تماس بگیرید.
+            </div>
+            <div class="footer-contact">
+                &#127807; یاشیل آرت | yashilartshop.ir
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

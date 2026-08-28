@@ -17,6 +17,11 @@ class CheckoutView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         order = serializer.save()
+
+        # صدور خودکار فاکتور پس از ثبت سفارش
+        from apps.invoices.services import generate_invoice_from_order
+        generate_invoice_from_order(order)
+
         return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
 
 

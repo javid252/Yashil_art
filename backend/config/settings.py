@@ -165,6 +165,7 @@ INSTALLED_APPS = [
     "apps.accounting",
     "apps.payments",
     "apps.content",
+    "apps.invoices",
 ]
 
 MIDDLEWARE = [

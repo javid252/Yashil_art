@@ -8,6 +8,7 @@
       </p>
       <div class="success-actions">
         <router-link to="/my-orders" class="btn btn-primary">پیگیری سفارش‌ها</router-link>
+        <router-link to="/my-invoices" class="btn btn-outline">🧾 فاکتور خرید</router-link>
         <router-link to="/products" class="btn btn-outline">ادامه خرید</router-link>
       </div>
     </div>

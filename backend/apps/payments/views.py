@@ -163,7 +163,9 @@ class OnlinePaymentCallbackView(APIView):
         order.save(update_fields=["status"])
 
         from apps.accounting.services import ensure_income_transaction
+        from apps.invoices.services import create_invoice_for_order
 
+        create_invoice_for_order(order, payment)
         ensure_income_transaction(order)
 
         return redirect(f"{result_base}?status=success&order={order.id}")
@@ -197,8 +199,10 @@ class AdminPaymentViewSet(viewsets.ModelViewSet):
             order.status = Order.Status.PAID
             order.save(update_fields=["status"])
 
-            from apps.accounting.services import ensure_income_transaction
+            from apps.invoices.services import create_invoice_for_order
+            create_invoice_for_order(order, payment)
 
+            from apps.accounting.services import ensure_income_transaction
             ensure_income_transaction(order, request.user)
 
         return Response(PaymentSerializer(payment).data)
