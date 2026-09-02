@@ -521,20 +521,15 @@ export default {
 </script>
 
 <style scoped>
-/* ═══════════════════════════════════════════════════════════════ */
-/* DESIGN TOKENS                                                  */
-/* ═══════════════════════════════════════════════════════════════ */
-:root {
+.landing {
+  font-family: "Vazirmatn", Tahoma, sans-serif;
   --accent: #c9a96e;
+  --accent-light: #e8d5a8;
   --dark: #0f1410;
   --dark-card: #161d18;
   --cream: #faf7f2;
   --forest: #2d6a4f;
   --terracotta: #c4725a;
-}
-
-.landing {
-  font-family: "Vazirmatn", Tahoma, sans-serif;
   background: var(--cream);
   color: #1a1a1a;
 }
@@ -545,8 +540,8 @@ export default {
   padding: 0 24px;
 }
 
-.text-accent { color: var(--accent); }
-.text-accent-light { color: #e8d5a8; }
+.text-accent { color: #c9a96e; }
+.text-accent-light { color: #f0dbb4; }
 
 .section-tag {
   display: inline-flex;
@@ -583,7 +578,7 @@ export default {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  background: var(--dark);
+  background: linear-gradient(160deg, #0a1a12 0%, #0f2a1c 30%, #1a2f1e 60%, #0f1f14 100%);
   overflow: hidden;
   padding: 120px 0 80px;
 }
@@ -609,23 +604,23 @@ export default {
 .hero__orb--1 {
   width: 600px;
   height: 600px;
-  background: rgba(45, 106, 79, 0.25);
+  background: rgba(45, 106, 79, 0.4);
   top: -200px;
   right: 10%;
   animation: float 15s ease-in-out infinite;
 }
 .hero__orb--2 {
-  width: 400px;
-  height: 400px;
-  background: rgba(201, 169, 110, 0.15);
+  width: 500px;
+  height: 500px;
+  background: rgba(201, 169, 110, 0.3);
   bottom: -100px;
   left: 5%;
   animation: float 12s ease-in-out infinite 4s;
 }
 .hero__orb--3 {
-  width: 300px;
-  height: 300px;
-  background: rgba(196, 114, 90, 0.12);
+  width: 400px;
+  height: 400px;
+  background: rgba(196, 114, 90, 0.25);
   top: 40%;
   left: 40%;
   animation: float 18s ease-in-out infinite 8s;
@@ -666,12 +661,12 @@ export default {
 .hero__tag-line {
   width: 40px;
   height: 2px;
-  background: var(--accent);
+  background: #c9a96e;
 }
 .hero__tag-text {
   font-size: 0.85rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
   letter-spacing: 0.05em;
 }
 
@@ -684,7 +679,7 @@ export default {
 .hero__title-line--1 {
   font-size: clamp(1rem, 2vw, 1.4rem);
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.6);
   margin-bottom: 4px;
 }
 .hero__title-line--2 {
@@ -694,12 +689,13 @@ export default {
   margin-bottom: 4px;
 }
 .hero__title-accent {
-  background: linear-gradient(135deg, var(--accent), #e8d5a8, var(--terracotta));
+  background: linear-gradient(135deg, #c9a96e, #f0dbb4, #e8a547);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: shimmer 6s ease-in-out infinite;
+  text-shadow: 0 0 60px rgba(201, 169, 110, 0.3);
 }
 @keyframes shimmer {
   0%, 100% { background-position: 0% 50%; }
@@ -708,13 +704,13 @@ export default {
 .hero__title-line--3 {
   font-size: clamp(1.4rem, 3vw, 2.2rem);
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .hero__subtitle {
   font-size: 1.05rem;
   line-height: 1.9;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.65);
   margin-bottom: 36px;
   max-width: 480px;
 }
@@ -737,21 +733,21 @@ export default {
   text-decoration: none;
 }
 .hero__btn--primary {
-  background: var(--accent);
-  color: var(--dark);
+  background: linear-gradient(135deg, #c9a96e, #e8a547);
+  color: #0a1a12;
 }
 .hero__btn--primary:hover {
-  background: #e8d5a8;
+  background: linear-gradient(135deg, #e8d5a8, #f0c96e);
   transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(201, 169, 110, 0.35);
+  box-shadow: 0 12px 40px rgba(201, 169, 110, 0.45);
 }
 .hero__btn--ghost {
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(201, 169, 110, 0.4);
+  color: #c9a96e;
 }
 .hero__btn--ghost:hover {
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.05);
+  border-color: #c9a96e;
+  background: rgba(201, 169, 110, 0.1);
 }
 
 .hero__stats {
@@ -766,16 +762,16 @@ export default {
   display: block;
   font-size: 1.8rem;
   font-weight: 900;
-  color: var(--accent);
+  color: #c9a96e;
 }
 .hero__stat-label {
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.6);
 }
 .hero__stat-divider {
   width: 1px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(201, 169, 110, 0.25);
 }
 
 /* Hero Visual — Art canvas */
@@ -788,7 +784,7 @@ export default {
   pointer-events: none;
   width: 600px;
   height: 600px;
-  opacity: 0.15;
+  opacity: 0.3;
 }
 
 .hero__canvas {
@@ -849,7 +845,7 @@ export default {
   transform: translate(-50%, -50%);
   width: 300px;
   height: 300px;
-  border: 1px solid rgba(201, 169, 110, 0.2);
+  border: 2px solid rgba(201, 169, 110, 0.35);
   border-radius: 50%;
   animation: spin 30s linear infinite;
 }
@@ -879,16 +875,16 @@ export default {
 .hero__scroll-line {
   width: 1px;
   height: 40px;
-  background: linear-gradient(to bottom, var(--accent), transparent);
+  background: linear-gradient(to bottom, #c9a96e, transparent);
   animation: scrollPulse 2s ease-in-out infinite;
 }
 @keyframes scrollPulse {
-  0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+  0%, 100% { opacity: 0.4; transform: scaleY(0.6); }
   50% { opacity: 1; transform: scaleY(1); }
 }
 .hero__scroll span {
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.5);
   letter-spacing: 0.1em;
 }
 
@@ -896,9 +892,9 @@ export default {
 /* MARQUEE                                                        */
 /* ═══════════════════════════════════════════════════════════════ */
 .marquee-section {
-  background: var(--dark);
-  border-top: 1px solid rgba(201, 169, 110, 0.15);
-  border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+  background: linear-gradient(160deg, #0a1a12, #0f2a1c);
+  border-top: 1px solid rgba(201, 169, 110, 0.2);
+  border-bottom: 1px solid rgba(201, 169, 110, 0.2);
   padding: 18px 0;
   overflow: hidden;
 }
@@ -923,9 +919,9 @@ export default {
   color: rgba(255, 255, 255, 0.7);
 }
 .marquee__dot {
-  color: var(--accent);
+  color: #c9a96e;
   font-size: 0.5rem;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 @keyframes marqueeScroll {
   from { transform: translateX(0); }
@@ -964,7 +960,7 @@ export default {
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: rgba(45, 106, 79, 0.08);
+  background: rgba(45, 106, 79, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1013,7 +1009,7 @@ export default {
 /* ═══════════════════════════════════════════════════════════════ */
 .disciplines {
   padding: 120px 0;
-  background: var(--dark);
+  background: linear-gradient(180deg, #0a1a12, #0f2a1c, #0a1a12);
 }
 .disciplines .section-title {
   color: white;
@@ -1041,6 +1037,8 @@ export default {
 }
 .bento__card--1 { grid-column: 1 / 3; }
 .bento__card--4 { grid-column: 2 / 4; }
+.bento__card--2 { border-left: 3px solid #c9a96e; }
+.bento__card--5 { border-left: 3px solid #c9a96e; }
 
 .bento__card-bg {
   position: absolute;
@@ -1109,12 +1107,12 @@ export default {
 .featured__see-all {
   font-size: 0.92rem;
   font-weight: 700;
-  color: var(--forest);
+  color: #2d6a4f;
   text-decoration: none;
   transition: color 0.2s;
 }
 .featured__see-all:hover {
-  color: var(--accent);
+  color: #c9a96e;
 }
 
 .featured__scroll {
@@ -1188,7 +1186,7 @@ export default {
 .course-card__category {
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--forest);
+  color: #2d6a4f;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -1227,7 +1225,7 @@ export default {
   transition: all 0.2s;
 }
 .course-card:hover .course-card__arrow {
-  background: var(--forest);
+  background: #2d6a4f;
   color: white;
 }
 
@@ -1259,8 +1257,8 @@ export default {
 }
 .instructor-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
-  border-color: var(--accent);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+  border-color: #c9a96e;
 }
 
 .instructor-card__avatar {
@@ -1330,11 +1328,11 @@ export default {
 .gallery-section__see-all {
   font-size: 0.92rem;
   font-weight: 700;
-  color: var(--forest);
+  color: #2d6a4f;
   text-decoration: none;
 }
 .gallery-section__see-all:hover {
-  color: var(--accent);
+  color: #c9a96e;
 }
 
 .masonry {
@@ -1393,7 +1391,7 @@ export default {
 /* ═══════════════════════════════════════════════════════════════ */
 .workshops {
   padding: 120px 0;
-  background: var(--dark);
+  background: linear-gradient(180deg, #0f2a1c, #0a1a12);
 }
 .workshops .section-title { color: white; }
 .workshops__header { margin-bottom: 60px; }
@@ -1406,13 +1404,14 @@ export default {
 
 .workshop-card {
   position: relative;
-  background: var(--dark-card);
+  background: rgba(22, 29, 24, 0.8);
   border-radius: 20px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(201, 169, 110, 0.1);
+  backdrop-filter: blur(10px);
 }
 .workshop-card:hover {
   transform: translateY(-6px);
@@ -1435,8 +1434,8 @@ export default {
   border-radius: 20px;
   font-size: 0.72rem;
   font-weight: 700;
-  background: rgba(201, 169, 110, 0.12);
-  color: var(--accent);
+  background: rgba(201, 169, 110, 0.18);
+  color: #c9a96e;
 }
 .workshop-card__badge--date {
   background: rgba(255, 255, 255, 0.06);
@@ -1463,7 +1462,7 @@ export default {
 }
 .workshop-card__price {
   font-weight: 900;
-  color: var(--accent);
+  color: #c9a96e;
   font-size: 1rem;
 }
 .workshop-card__spots {
@@ -1497,7 +1496,7 @@ export default {
 .testimonial-card__quote {
   font-size: 4rem;
   font-weight: 900;
-  color: var(--accent);
+  color: #c9a96e;
   line-height: 1;
   margin-bottom: 8px;
   opacity: 0.5;
@@ -1559,8 +1558,8 @@ export default {
 }
 .why-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
-  border-color: var(--accent);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+  border-color: #c9a96e;
 }
 .why-card__number {
   position: absolute;
@@ -1592,7 +1591,7 @@ export default {
 .cta-section {
   position: relative;
   padding: 140px 0;
-  background: var(--dark);
+  background: linear-gradient(160deg, #0a1a12 0%, #1a3a2a 50%, #0f2a1c 100%);
   overflow: hidden;
 }
 .cta-section__bg {
@@ -1651,20 +1650,20 @@ export default {
   transition: all 0.3s;
 }
 .cta-btn--primary {
-  background: var(--accent);
-  color: var(--dark);
+  background: linear-gradient(135deg, #c9a96e, #e8a547);
+  color: #0a1a12;
 }
 .cta-btn--primary:hover {
-  background: #e8d5a8;
+  background: linear-gradient(135deg, #e8d5a8, #f0c96e);
   transform: translateY(-2px);
 }
 .cta-btn--ghost {
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(201, 169, 110, 0.3);
+  color: #c9a96e;
 }
 .cta-btn--ghost:hover {
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.05);
+  border-color: #c9a96e;
+  background: rgba(201, 169, 110, 0.08);
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
