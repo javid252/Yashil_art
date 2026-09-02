@@ -58,7 +58,7 @@
           <div class="bg-orb b3"></div>
         </div>
         <div class="container hero-inner">
-          <div class="hero-text" data-scroll="fade-up">
+          <div class="hero-text" >
             <span class="hero-label">
               <span class="dot"></span>
               آموزشگاه آزاد هنرهای تجسمی یاشیل
@@ -96,7 +96,7 @@
       <!-- CATEGORIES -->
       <section class="section">
         <div class="container">
-          <div class="sec-hdr" data-scroll="fade-up">
+          <div class="sec-hdr" >
             <div class="accent"></div>
             <h2>رشته‌های <span class="hl-r">آموزشی</span></h2>
           </div>
@@ -106,8 +106,8 @@
               :key="cat.id"
               :to="`/courses?category=${cat.id}`"
               class="cat-card"
-              data-scroll="fade-up"
-              :data-delay="i * 80"
+              
+             
             >
               <div class="cat-icon" :style="{ background: grads[i % grads.length] }">{{ cat.icon || '🎭' }}</div>
               <h3>{{ cat.name }}</h3>
@@ -120,7 +120,7 @@
       <!-- COURSES -->
       <section class="section alt">
         <div class="container">
-          <div class="sec-hdr" data-scroll="fade-up">
+          <div class="sec-hdr" >
             <div class="accent"></div>
             <h2>محبوب‌ترین <span class="hl-p">دوره‌ها</span></h2>
           </div>
@@ -130,8 +130,8 @@
               :key="c.id"
               :to="`/courses/${c.id}/${c.slug}`"
               class="crd"
-              data-scroll="fade-up"
-              :data-delay="i * 100"
+              
+             
             >
               <div class="crd-img">
                 <img v-if="c.thumbnail" :src="c.thumbnail" :alt="c.title" />
@@ -148,7 +148,7 @@
               </div>
             </router-link>
           </div>
-          <div class="ctr" data-scroll="fade-up">
+          <div class="ctr" >
             <router-link to="/courses" class="lnk">مشاهده همه دوره‌ها ←</router-link>
           </div>
         </div>
@@ -157,7 +157,7 @@
       <!-- INSTRUCTORS -->
       <section class="section">
         <div class="container">
-          <div class="sec-hdr" data-scroll="fade-up">
+          <div class="sec-hdr" >
             <div class="accent"></div>
             <h2>اساتید <span class="hl-g">ما</span></h2>
           </div>
@@ -167,8 +167,8 @@
               :key="inst.id"
               :to="`/instructors/${inst.id}/${inst.slug}`"
               class="inst-crd"
-              data-scroll="fade-up"
-              :data-delay="i * 100"
+              
+             
             >
               <div class="inst-av" :style="{ borderColor: avClrs[i % avClrs.length] }">
                 <img v-if="inst.photo" :src="inst.photo" :alt="inst.display_name" />
@@ -190,7 +190,7 @@
       <!-- GALLERY -->
       <section class="section dark">
         <div class="container">
-          <div class="sec-hdr" data-scroll="fade-up">
+          <div class="sec-hdr" >
             <div class="accent"></div>
             <h2>گالری <span class="hl-y">آثار هنری</span></h2>
           </div>
@@ -199,8 +199,8 @@
               v-for="(art, i) in galleryArtworks"
               :key="art.id"
               class="gal-item"
-              data-scroll="scale-in"
-              :data-delay="i * 80"
+              
+             
               @click="openArtwork(art)"
             >
               <img :src="art.image" :alt="art.title" loading="lazy" />
@@ -216,7 +216,7 @@
       <!-- WORKSHOPS -->
       <section class="section alt">
         <div class="container">
-          <div class="sec-hdr" data-scroll="fade-up">
+          <div class="sec-hdr" >
             <div class="accent"></div>
             <h2>کارگاه‌های <span class="hl-o">ویژه</span></h2>
           </div>
@@ -226,8 +226,8 @@
               :key="ws.id"
               :to="`/workshops/${ws.id}/${ws.slug}`"
               class="ws-crd"
-              data-scroll="fade-up"
-              :data-delay="i * 120"
+              
+             
             >
               <div class="ws-top" :style="{ background: wsGrads[i % wsGrads.length] }">
                 <span>{{ ws.duration_type_display }}</span>
@@ -256,14 +256,14 @@
           <div class="orb o2"></div>
         </div>
         <div class="container">
-          <div class="why-row" data-scroll="fade-up">
+          <div class="why-row" >
             <div class="why-c" v-for="(item, i) in whyItems" :key="i">
               <div class="why-ic" :style="{ background: whyClrs[i] }">{{ item.icon }}</div>
               <h3>{{ item.title }}</h3>
               <p>{{ item.desc }}</p>
             </div>
           </div>
-          <div class="cta-ct" data-scroll="fade-up">
+          <div class="cta-ct" >
             <h2>آماده شروع <span class="hl-y">مسیر هنری</span> خود هستید؟</h2>
             <div class="cta-b">
               <router-link to="/courses" class="btn-gold">مشاهده دوره‌ها</router-link>
@@ -335,15 +335,7 @@ export default {
     },
     handleScroll() { this.scrollY = window.scrollY; },
     setupObserver() {
-      const obs = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            const d = parseInt(e.target.dataset.delay || "0");
-            setTimeout(() => e.target.classList.add("visible"), d);
-          }
-        });
-      }, { threshold: 0.1 });
-      document.querySelectorAll("[data-scroll]").forEach((el) => obs.observe(el));
+      // No-op for now — content is always visible
     },
     async loadCategories() { try { const { data } = await api.get("/courses/categories/"); this.courseCategories = data; } catch (e) {} },
     async loadCourses() { try { const { data } = await api.get("/courses/", { params: { is_featured: true } }); this.featuredCourses = (data.results || data).slice(0, 4); } catch (e) {} },
@@ -369,11 +361,9 @@ export default {
 <style scoped>
 .hl-r{color:#ff6b6b}.hl-p{color:#6c5ce7}.hl-g{color:#00b894}.hl-o{color:#f39c12}.hl-y{color:#fdcb6e}
 
-/* SCROLL ANIMATIONS */
-[data-scroll]{opacity:0;transition:all .8s cubic-bezier(.16,1,.3,1)}
-[data-scroll="fade-up"]{transform:translateY(50px)}
-[data-scroll="scale-in"]{transform:scale(.85)}
-[data-scroll].visible{opacity:1!important;transform:none!important}
+/* SCROLL ANIMATIONS — visible by default, enhanced with JS */
+[data-scroll]{transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);will-change:transform,opacity}
+@media (prefers-reduced-motion:reduce){[data-scroll]{transition:none!important}}
 
 /* ============================================
    FIXED SEMA - Whirling Dervishes
