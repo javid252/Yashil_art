@@ -14,6 +14,12 @@
         <router-link to="/admin/accounting">💰 حسابداری</router-link>
         <router-link to="/admin/invoices">🧾 فاکتورها</router-link>
         <router-link to="/admin/payments">💳 پرداخت‌ها</router-link>
+        <div class="nav-divider"></div>
+        <span class="nav-section-title">آموزشگاه</span>
+        <router-link to="/admin/courses">📚 دوره‌ها</router-link>
+        <router-link to="/admin/instructors">👨‍🏫 اساتید</router-link>
+        <router-link to="/admin/gallery-admin">🖼️ گالری</router-link>
+        <router-link to="/admin/workshops-admin">🎪 کارگاه‌ها</router-link>
         <router-link v-if="isSuperUser" to="/admin/payment-settings">💳 تنظیمات پرداخت</router-link>
         <router-link v-if="isSuperUser" to="/admin/social-auth-settings">🔐 ورود اجتماعی</router-link>
         <router-link v-if="isSuperUser" to="/admin/roles">🛡️ نقش‌ها و دسترسی‌ها</router-link>
@@ -105,6 +111,20 @@ export default {
 .admin-nav a.router-link-active {
   background: var(--color-accent);
   color: var(--color-primary-dark);
+}
+.nav-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 12px 0;
+}
+.nav-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0 12px;
+  margin-bottom: 4px;
 }
 .admin-back {
   font-size: 0.8rem;

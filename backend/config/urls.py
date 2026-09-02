@@ -19,6 +19,15 @@ urlpatterns = [
     path("api/payments/", include("apps.payments.urls")),
     path("api/content/", include("apps.content.urls")),
     path("api/invoices/", include("apps.invoices.urls")),
+    # Education APIs
+    path("api/courses/", include("apps.courses.urls")),
+    path("api/instructors/", include("apps.instructors.urls")),
+    path("api/enrollments/", include("apps.enrollments.urls")),
+    path("api/attendance/", include("apps.attendance.urls")),
+    path("api/grades/", include("apps.grades.urls")),
+    path("api/certificates/", include("apps.certificates.urls")),
+    path("api/gallery/", include("apps.gallery.urls")),
+    path("api/workshops/", include("apps.workshops.urls")),
 ]
 
 if settings.DEBUG:

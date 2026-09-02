@@ -93,8 +93,17 @@ if IS_PRODUCTION and not ALLOWED_HOSTS:
 # ============================================================
 # Database
 # ============================================================
+#
+# Two separate databases:
+# - default: Shop/products/orders/invoices (main database)
+# - education: Courses/instructors/enrollments/grades/gallery
+#
+# This allows independent backups and cleaner separation.
+# User authentication stays in the default database (shared).
+# ============================================================
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+EDUCATION_DATABASE_URL = os.environ.get("EDUCATION_DATABASE_URL", "").strip()
 
 DATABASE_SSL_REQUIRE = (
     os.environ.get(
@@ -119,6 +128,28 @@ if DATABASE_URL:
     DATABASES["default"].setdefault("OPTIONS", {})
     DATABASES["default"]["OPTIONS"]["charset"] = "utf8mb4"
 
+    # Education database (separate)
+    if EDUCATION_DATABASE_URL:
+        DATABASES["education"] = dj_database_url.parse(
+            EDUCATION_DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=DATABASE_SSL_REQUIRE,
+        )
+        DATABASES["education"].setdefault("OPTIONS", {})
+        DATABASES["education"]["OPTIONS"]["charset"] = "utf8mb4"
+    else:
+        # In production, education database is required
+        if IS_PRODUCTION:
+            # For now, fall back to using default database
+            # You can set EDUCATION_DATABASE_URL later
+            DATABASES["education"] = DATABASES["default"].copy()
+        else:
+            # Development: use a separate SQLite file
+            DATABASES["education"] = {
+                "ENGINE": "django.db.backends.sqlite3",
+                "NAME": BASE_DIR / "db_education.sqlite3",
+            }
+
 
 elif IS_PRODUCTION:
 
@@ -135,7 +166,11 @@ else:
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
-        }
+        },
+        "education": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db_education.sqlite3",
+        },
     }
 
 # --------------------------------------------------------------------------
@@ -166,6 +201,15 @@ INSTALLED_APPS = [
     "apps.payments",
     "apps.content",
     "apps.invoices",
+    # Education apps
+    "apps.courses",
+    "apps.instructors",
+    "apps.enrollments",
+    "apps.attendance",
+    "apps.grades",
+    "apps.certificates",
+    "apps.gallery",
+    "apps.workshops",
 ]
 
 MIDDLEWARE = [
@@ -263,6 +307,12 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = list(
     dict.fromkeys(_extra_origins)
 )
+
+# --------------------------------------------------------------------------
+# Database Router
+# --------------------------------------------------------------------------
+# Routes education apps to the separate 'education' database
+DATABASE_ROUTERS = ["config.database_router.EducationDatabaseRouter"]
 # --------------------------------------------------------------------------
 # Django REST Framework
 # --------------------------------------------------------------------------

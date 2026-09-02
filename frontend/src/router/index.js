@@ -6,7 +6,18 @@ import store from "@/store";
 Vue.use(VueRouter);
 
 const routes = [
-  { path: "/", name: "home", component: () => import("@/views/Home.vue") },
+  { path: "/", name: "home", component: () => import("@/views/LandingPage.vue") },
+  { path: "/shop", name: "shop", component: () => import("@/views/Home.vue") },
+  { path: "/courses", name: "course-list", component: () => import("@/views/CourseList.vue") },
+  { path: "/courses/:id/:slug", name: "course-detail", component: () => import("@/views/CourseDetail.vue") },
+  { path: "/gallery", name: "gallery", component: () => import("@/views/Gallery.vue") },
+  { path: "/workshops", name: "workshop-list", component: () => import("@/views/WorkshopList.vue") },
+  {
+    path: "/my-courses",
+    name: "student-dashboard",
+    component: () => import("@/views/StudentDashboard.vue"),
+    meta: { requiresAuth: true },
+  },
   { path: "/products", name: "product-list", component: () => import("@/views/ProductList.vue") },
   { path: "/products/:id/:slug", name: "product-detail", component: () => import("@/views/ProductDetail.vue") },
   { path: "/cart", name: "cart", component: () => import("@/views/Cart.vue") },
@@ -123,6 +134,10 @@ const routes = [
       { path: "inventory", name: "admin-inventory", component: () => import("@/views/admin/AdminInventory.vue") },
       { path: "accounting", name: "admin-accounting", component: () => import("@/views/admin/AdminAccounting.vue") },
       { path: "invoices", name: "admin-invoices", component: () => import("@/views/admin/AdminInvoices.vue") },
+      { path: "courses", name: "admin-courses", component: () => import("@/views/admin/AdminCourses.vue") },
+      { path: "instructors", name: "admin-instructors", component: () => import("@/views/admin/AdminInstructors.vue") },
+      { path: "gallery-admin", name: "admin-gallery", component: () => import("@/views/admin/AdminGallery.vue") },
+      { path: "workshops-admin", name: "admin-workshops", component: () => import("@/views/admin/AdminWorkshops.vue") },
     ],
   },
   {

@@ -22,11 +22,10 @@
       <!-- Menu -->
       <div class="nav-links">
         <router-link to="/" exact>خانه</router-link>
-        <router-link to="/products">محصولات</router-link>
-        <router-link v-if="multivendorEnabled" to="/stores">فروشگاه‌ها</router-link>
-        <router-link to="/products?featured=1">پیشنهاد ویژه</router-link>
-        <router-link to="/products?ordering=-created_at">جدیدترین‌ها</router-link>
-        <router-link to="/products?ordering=-sales_count">پرفروش‌ترین‌ها</router-link>
+        <router-link to="/courses">دوره‌ها</router-link>
+        <router-link to="/gallery">گالری</router-link>
+        <router-link to="/workshops">کارگاه‌ها</router-link>
+        <router-link to="/shop">فروشگاه</router-link>
         <router-link to="/contact">تماس با ما</router-link>
       </div>
     </div>

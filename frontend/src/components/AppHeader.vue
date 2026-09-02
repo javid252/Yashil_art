@@ -26,7 +26,7 @@
 
         <!-- Search -->
         <form class="search-box" @submit.prevent="submitSearch">
-          <input v-model="searchQuery" type="text" placeholder="جستجو در محصولات..." />
+          <input v-model="searchQuery" type="text" placeholder="جستجو در دوره‌ها و محصولات..." />
           <button type="submit" aria-label="جستجو">🔍</button>
         </form>
 
@@ -48,6 +48,7 @@
 
             <transition name="dropdown">
               <div v-if="menuOpen" class="user-dropdown" @click="menuOpen = false">
+                <router-link to="/my-courses">📚 پنل دانشجو</router-link>
                 <router-link to="/my-orders">📋 سفارش‌های من</router-link>
                 <router-link to="/my-invoices">🧾 فاکتورهای من</router-link>
                 <router-link v-if="isApprovedVendor" to="/vendor">🏪 پنل فروشنده</router-link>
