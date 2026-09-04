@@ -1,6 +1,12 @@
+from django.contrib.auth import get_user_model
+
 from rest_framework import serializers
 
+from apps.instructors.models import Instructor
+
 from .models import GalleryArtwork, GalleryCategory, GalleryComment, GalleryExhibition, GalleryLike
+
+User = get_user_model()
 
 
 class GalleryCategorySerializer(serializers.ModelSerializer):
@@ -59,6 +65,43 @@ class GalleryArtworkListSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.likes.filter(user=request.user).exists()
         return False
+
+
+class GalleryArtworkWriteSerializer(serializers.ModelSerializer):
+    """سریالایزر ساخت/ویرایش اثر هنری از پنل مدیریت آموزشگاه.
+
+    «هنرمند» اختیاری است؛ اگر ارسال نشود، کاربرِ لاگین‌شده (مدیر) به‌عنوان
+    سازنده اثر ثبت می‌شود تا بتواند بعداً با انتخاب از لیست هنرجویان آن را اصلاح کند.
+    """
+
+    artist = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), required=False, allow_null=True,
+    )
+    instructor = serializers.PrimaryKeyRelatedField(
+        queryset=Instructor.objects.all(), required=False, allow_null=True,
+    )
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=GalleryCategory.objects.all(), required=False, allow_null=True,
+    )
+    exhibition = serializers.PrimaryKeyRelatedField(
+        queryset=GalleryExhibition.objects.all(), required=False, allow_null=True,
+    )
+    image = serializers.ImageField(required=False, allow_null=True)
+    thumbnail = serializers.ImageField(required=False, allow_null=True)
+
+    class Meta:
+        model = GalleryArtwork
+        fields = [
+            "id", "artist", "instructor", "category", "exhibition",
+            "title", "description", "medium", "dimensions", "year_created",
+            "image", "thumbnail",
+            "is_featured", "is_published", "is_for_sale", "sale_price",
+        ]
+
+    def validate(self, attrs):
+        if not self.instance and "image" not in attrs:
+            raise serializers.ValidationError({"image": "تصویر اثر الزامی است."})
+        return attrs
 
 
 class GalleryArtworkDetailSerializer(serializers.ModelSerializer):

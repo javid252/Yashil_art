@@ -37,9 +37,10 @@ class Assessment(models.Model):
 class Grade(models.Model):
     """نمره دانشجو"""
     assessment = models.ForeignKey(Assessment, related_name="grades", on_delete=models.CASCADE)
+    # db_constraint=False: رابطه بین‌دیتابیسی با کاربر (دیتابیس default)
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="دانشجو", related_name="grades",
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE, db_constraint=False,
     )
     score = models.DecimalField(
         "نمره", max_digits=6, decimal_places=2,
@@ -48,7 +49,7 @@ class Grade(models.Model):
     feedback = models.TextField("بازخورد", blank=True)
     graded_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="ثبت شده توسط", related_name="graded_assessments",
-        on_delete=models.SET_NULL, null=True, blank=True,
+        on_delete=models.SET_NULL, null=True, blank=True, db_constraint=False,
     )
     graded_at = models.DateTimeField("تاریخ ثبت نمره", auto_now_add=True)
     updated_at = models.DateTimeField("آخرین بروزرسانی", auto_now=True)
@@ -84,7 +85,7 @@ class FinalGrade(models.Model):
     course = models.ForeignKey("courses.Course", related_name="final_grades", on_delete=models.CASCADE)
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="دانشجو", related_name="final_grades",
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE, db_constraint=False,
     )
     enrollment = models.OneToOneField(
         "enrollments.Enrollment", verbose_name="ثبت‌نام", related_name="final_grade",

@@ -1,7 +1,9 @@
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from apps.access.permissions import IsEducationAdmin
 
 from .models import Workshop, WorkshopCategory, WorkshopRegistration
 from .serializers import (
@@ -9,29 +11,45 @@ from .serializers import (
     WorkshopDetailSerializer,
     WorkshopListSerializer,
     WorkshopRegistrationSerializer,
+    WorkshopWriteSerializer,
 )
 
 
-class WorkshopCategoryViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = WorkshopCategory.objects.filter(is_active=True)
+class WorkshopCategoryViewSet(viewsets.ModelViewSet):
+    queryset = WorkshopCategory.objects.all()
     serializer_class = WorkshopCategorySerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsEducationAdmin]
     pagination_class = None
 
+    def get_queryset(self):
+        qs = WorkshopCategory.objects.all()
+        user = self.request.user
+        if user and user.is_authenticated and user.is_staff:
+            return qs
+        return qs.filter(is_active=True)
 
-class WorkshopViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [AllowAny]
+
+class WorkshopViewSet(viewsets.ModelViewSet):
+    """کارگاه‌ها: خواندن عمومی، نوشتن فقط مدیر آموزشگاه/مدیرکل."""
+
+    permission_classes = [IsEducationAdmin]
     filterset_fields = ["category", "duration_type", "status", "is_featured", "is_online"]
     search_fields = ["title", "description"]
     ordering_fields = ["start_date", "price", "created_at"]
 
     def get_queryset(self):
-        return Workshop.objects.filter(is_active=True)
+        qs = Workshop.objects.all()
+        user = self.request.user
+        if user and user.is_authenticated and user.is_staff:
+            return qs
+        return qs.filter(is_active=True)
 
     def get_serializer_class(self):
+        if self.action == "list":
+            return WorkshopListSerializer
         if self.action == "retrieve":
             return WorkshopDetailSerializer
-        return WorkshopListSerializer
+        return WorkshopWriteSerializer
 
     @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
     def register(self, request, pk=None):

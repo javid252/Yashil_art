@@ -6,9 +6,14 @@ from .models import PhoneOTP, SocialAuthSettings, SocialIdentity, User
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
-    list_display = ["username", "email", "first_name", "last_name", "is_staff", "is_active"]
+    list_display = ["username", "email", "first_name", "last_name", "is_student", "is_instructor", "is_staff", "is_active"]
+    list_filter = ["is_staff", "is_active", "is_student", "is_instructor"]
     fieldsets = UserAdmin.fieldsets + (
         ("اطلاعات تکمیلی", {"fields": ("phone_number",)}),
+        ("نقش‌های آموزشگاه", {"fields": ("is_student", "is_instructor")}),
+    )
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        ("نقش‌های آموزشگاه", {"fields": ("is_student", "is_instructor")}),
     )
 
 

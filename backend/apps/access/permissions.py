@@ -43,6 +43,35 @@ def model_perm_codename(method, app_label, model_name):
     return f"{app_label}.{action}_{model_name}"
 
 
+class IsEducationAdmin(permissions.BasePermission):
+    """
+    برای ماژول‌های آموزشگاه (دوره‌ها، اساتید، گالری، کارگاه‌ها):
+
+    خواندن برای عموم آزاد است؛ نوشتن (ساخت/ویرایش/حذف) فقط برای staff که
+    نقش «مدیر آموزشگاه» یا «مدیرکل» دارد (یا superuser). پرمیشن جنگویی اعمال
+    نمی‌شود چون اپ‌های آموزشگاه در دیتابیس جداگانه‌اند و دسترسی به آن‌ها از
+    طریق نقش‌ها و فلگ‌های کاربر مدیریت می‌شود - نه از طریق Group+Permission.
+    این یعنی حسابدار/انباردار/مدیر فروشگاه (که staff هستند ولی نقش آموزشگاهی
+    ندارند) نمی‌توانند محتوای آموزشی بسازند یا تغییر دهند.
+    """
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        user = request.user
+        if not (user and user.is_authenticated and user.is_staff):
+            return False
+        if user.is_superuser:
+            return True
+        try:
+            from apps.access.roles import ROLE_ACADEMY_MANAGER, ROLE_GENERAL_MANAGER
+        except ImportError:
+            # اگر فایل roles.py وجود نداشته باشد، هر staff مجاز است
+            return True
+        names = set(user.groups.values_list("name", flat=True))
+        return ROLE_ACADEMY_MANAGER in names or ROLE_GENERAL_MANAGER in names
+
+
 class IsAdminWithModelPerm(permissions.BasePermission):
     """
     برای ViewSet هایی که کلاً بخش عمومی ندارند (فقط پنل ادمین/نقش‌های داخلی):

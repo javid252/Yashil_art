@@ -67,9 +67,10 @@ class GalleryArtwork(models.Model):
         MIXED = "mixed", "تکنیک ترکیبی"
         OTHER = "other", "سایر"
 
+    # db_constraint=False: رابطه بین‌دیتابیسی با کاربر (دیتابیس default)
     artist = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="هنرمند", related_name="gallery_artworks",
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE, db_constraint=False,
     )
     instructor = models.ForeignKey(
         "instructors.Instructor", verbose_name="استاد راهنما", related_name="artworks",
@@ -135,7 +136,7 @@ class GalleryComment(models.Model):
     artwork = models.ForeignKey(GalleryArtwork, related_name="comments", on_delete=models.CASCADE)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="کاربر", related_name="gallery_comments",
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE, db_constraint=False,
     )
     text = models.TextField("متن نظر")
     is_approved = models.BooleanField("تایید شده", default=True)
@@ -155,7 +156,7 @@ class GalleryLike(models.Model):
     artwork = models.ForeignKey(GalleryArtwork, related_name="likes", on_delete=models.CASCADE)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="کاربر", related_name="gallery_likes",
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE, db_constraint=False,
     )
     created_at = models.DateTimeField("تاریخ ایجاد", auto_now_add=True)
 

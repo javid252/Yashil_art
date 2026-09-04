@@ -124,9 +124,10 @@ class WorkshopRegistration(models.Model):
         CANCELLED = "cancelled", "لغو شده"
 
     workshop = models.ForeignKey(Workshop, related_name="registrations", on_delete=models.CASCADE)
+    # db_constraint=False: رابطه بین‌دیتابیسی با کاربر (دیتابیس default)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="شرکت‌کننده", related_name="workshop_registrations",
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE, db_constraint=False,
     )
     status = models.CharField("وضعیت", max_length=15, choices=Status.choices, default=Status.PENDING)
     registered_at = models.DateTimeField("تاریخ ثبت‌نام", auto_now_add=True)

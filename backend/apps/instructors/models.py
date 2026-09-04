@@ -5,9 +5,11 @@ from django.db import models
 
 class Instructor(models.Model):
     """پروفایل استاد"""
+    # db_constraint=False: کاربر در دیتابیس اصلی (default) است و این یک رابطه
+    # بین‌دیتابیسی است؛ SQLite نمی‌تواند FK بین دو فایل جدا اعمال کند.
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, verbose_name="کاربر", related_name="instructor_profile",
-        on_delete=models.CASCADE, null=True, blank=True,
+        on_delete=models.CASCADE, null=True, blank=True, db_constraint=False,
     )
     display_name = models.CharField("نام نمایشی", max_length=150)
     slug = models.SlugField("اسلاگ", max_length=170, unique=True, blank=True)

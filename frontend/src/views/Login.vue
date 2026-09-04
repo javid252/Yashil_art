@@ -52,8 +52,20 @@ export default {
       try {
         await this.$store.dispatch("auth/login", this.form);
         this.$store.dispatch("notify", { message: "خوش آمدید!" });
-        const redirect = this.$route.query.redirect || "/";
-        this.$router.push(redirect);
+        const redirect = this.$route.query.redirect;
+        if (redirect) {
+          this.$router.push(redirect);
+          return;
+        }
+        const u = this.$store.getters["auth/currentUser"];
+        if (u) {
+          if (u.is_staff || u.is_superuser) this.$router.push("/admin");
+          else if (u.is_instructor) this.$router.push("/instructor");
+          else if (u.is_student) this.$router.push("/student");
+          else this.$router.push("/");
+        } else {
+          this.$router.push("/");
+        }
       } catch (e) {
         this.errorMessage = "نام کاربری یا رمز عبور نادرست است.";
       } finally {

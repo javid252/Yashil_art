@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from apps.instructors.models import Instructor
+
 from .models import Workshop, WorkshopCategory, WorkshopRegistration
 
 
@@ -52,6 +54,29 @@ class WorkshopDetailSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             return obj.registrations.filter(user=request.user, status="confirmed").exists()
         return False
+
+
+class WorkshopWriteSerializer(serializers.ModelSerializer):
+    """سریالایزر ساخت/ویرایش کارگاه از پنل مدیریت آموزشگاه."""
+
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=WorkshopCategory.objects.all(), required=False, allow_null=True,
+    )
+    instructor = serializers.PrimaryKeyRelatedField(
+        queryset=Instructor.objects.all(), required=False, allow_null=True,
+    )
+
+    class Meta:
+        model = Workshop
+        fields = [
+            "id", "category", "instructor", "title", "slug", "description",
+            "short_description", "duration_type", "status",
+            "start_date", "end_date", "start_time", "end_time", "sessions_count",
+            "price", "max_participants",
+            "thumbnail", "cover_image",
+            "prerequisites", "materials", "location", "is_online",
+            "is_featured", "is_active",
+        ]
 
 
 class WorkshopRegistrationSerializer(serializers.ModelSerializer):

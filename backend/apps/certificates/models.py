@@ -42,9 +42,10 @@ class Certificate(models.Model):
         ISSUED = "issued", "صادر شده"
         REVOKED = "revoked", "لغو شده"
 
+    # db_constraint=False: رابطه بین‌دیتابیسی با کاربر (دیتابیس default)
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="دانشجو", related_name="certificates",
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE, db_constraint=False,
     )
     course = models.ForeignKey(
         "courses.Course", verbose_name="دوره", related_name="certificates",

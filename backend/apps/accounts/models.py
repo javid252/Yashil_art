@@ -11,6 +11,10 @@ class User(AbstractUser):
     email = models.EmailField("ایمیل", unique=True)
     phone_number = models.CharField("شماره موبایل", max_length=15, blank=True)
 
+    # ── نقش‌های آموزشگاه ──
+    is_student = models.BooleanField("دانشجو", default=False, help_text="آیا کاربر دانشجو است؟")
+    is_instructor = models.BooleanField("استاد", default=False, help_text="آیا کاربر استاد است؟")
+
     def __str__(self):
         return self.get_full_name() or self.username
 

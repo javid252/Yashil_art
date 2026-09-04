@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from apps.instructors.models import Instructor
+
 from .models import Course, CourseCategory, CourseGallery, CourseSchedule
 
 
@@ -47,6 +49,31 @@ class CourseListSerializer(serializers.ModelSerializer):
             "available_spots", "total_sessions", "thumbnail", "cover_image",
             "is_featured", "is_active", "created_at",
             "category", "category_name", "instructor", "instructor_name",
+        ]
+
+
+class CourseWriteSerializer(serializers.ModelSerializer):
+    """سریالایزر ساخت/ویرایش دوره از پنل مدیریت آموزشگاه."""
+
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=CourseCategory.objects.all(), required=False, allow_null=True,
+    )
+    instructor = serializers.PrimaryKeyRelatedField(
+        queryset=Instructor.objects.all(),
+        required=False, allow_null=True,
+    )
+    what_you_learn = serializers.JSONField(required=False)
+
+    class Meta:
+        model = Course
+        fields = [
+            "id", "category", "instructor", "title", "slug", "description",
+            "short_description", "level", "status", "pricing_type", "price",
+            "subscription_price", "discount_price", "duration_weeks",
+            "sessions_per_week", "session_duration_minutes", "max_students",
+            "prerequisites", "what_you_learn", "materials_needed",
+            "thumbnail", "cover_image", "promo_video_url",
+            "is_featured", "is_active",
         ]
 
 

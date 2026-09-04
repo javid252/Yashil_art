@@ -35,14 +35,15 @@ class Attendance(models.Model):
         EXCUSED = "excused", "مرخصی"
 
     session = models.ForeignKey(ClassSession, related_name="attendances", on_delete=models.CASCADE)
+    # db_constraint=False: رابطه بین‌دیتابیسی با کاربر (دیتابیس default)
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="دانشجو", related_name="attendances",
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE, db_constraint=False,
     )
     status = models.CharField("وضعیت", max_length=10, choices=Status.choices, default=Status.PRESENT)
     marked_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="ثبت شده توسط", related_name="marked_attendances",
-        on_delete=models.SET_NULL, null=True, blank=True,
+        on_delete=models.SET_NULL, null=True, blank=True, db_constraint=False,
     )
     note = models.CharField("یادداشت", max_length=200, blank=True)
     marked_at = models.DateTimeField("زمان ثبت", auto_now_add=True)

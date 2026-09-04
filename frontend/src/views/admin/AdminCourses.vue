@@ -2,7 +2,7 @@
   <div class="admin-page">
     <div class="page-header">
       <h1>📚 مدیریت دوره‌ها</h1>
-      <button class="btn btn-primary" @click="showForm = true">+ دوره جدید</button>
+      <router-link to="/admin/courses/new" class="btn btn-primary">+ دوره جدید</router-link>
     </div>
 
     <!-- Filters -->
@@ -42,8 +42,9 @@
             <td>
               <span class="status-badge" :class="`status-${course.status}`">{{ statusLabel(course.status) }}</span>
             </td>
-            <td>
-              <button class="btn-sm btn-outline" @click="editCourse(course)">ویرایش</button>
+            <td class="actions-cell">
+              <router-link :to="`/admin/courses/${course.id}/edit`" class="btn-sm btn-outline">ویرایش</router-link>
+              <button class="btn-sm btn-danger" @click="removeCourse(course)">حذف</button>
             </td>
           </tr>
         </tbody>
@@ -64,7 +65,6 @@ export default {
       courses: [],
       search: "",
       statusFilter: "",
-      showForm: false,
     };
   },
   methods: {
@@ -74,9 +74,15 @@ export default {
     statusLabel(s) {
       return { draft: "پیش‌نویس", published: "منتشر شده", archived: "بایگانی" }[s] || s;
     },
-    editCourse(course) {
-      // TODO: Open edit modal
-      console.log("Edit:", course);
+    async removeCourse(course) {
+      if (!confirm(`دوره «${course.title}» حذف شود؟`)) return;
+      try {
+        await api.delete(`/courses/${course.id}/`);
+        this.$store.dispatch("notify", { message: "دوره حذف شد." });
+        this.loadCourses();
+      } catch (e) {
+        this.$store.dispatch("notify", { message: "حذف دوره ناموفق بود.", type: "error" });
+      }
     },
     async loadCourses() {
       try {
@@ -137,9 +143,12 @@ export default {
 .status-published { background: #d4edda; color: #155724; }
 .status-archived { background: #e2e3e5; color: #383d41; }
 
-.btn-sm { padding: 4px 12px; font-size: 0.8rem; }
+.btn-sm { padding: 4px 12px; font-size: 0.8rem; text-decoration: none; display: inline-block; }
 .btn-outline { border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; }
 .btn-outline:hover { border-color: #6c5ce7; color: #6c5ce7; }
+.btn-danger { border: 1px solid #f5c6cb; background: #fef2f2; color: #b91c1c; border-radius: 4px; cursor: pointer; }
+.btn-danger:hover { background: #fee2e2; }
+.actions-cell { display: flex; gap: 8px; align-items: center; }
 .btn-primary { background: #6c5ce7; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; }
 
 .empty { text-align: center; padding: 40px; color: #999; }

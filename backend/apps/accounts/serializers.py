@@ -8,15 +8,28 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     permissions = serializers.SerializerMethodField()
+    groups = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    group_names = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = [
             "id", "username", "email", "first_name", "last_name",
             "phone_number", "is_staff", "is_superuser", "is_active",
+            "is_student", "is_instructor",
+            "groups", "group_names",
             "permissions", "date_joined",
         ]
-        read_only_fields = ["id", "is_staff", "is_superuser", "date_joined"]
+        # نقش‌ها و دسترسی‌ها فقط از سمت پنل مدیریت (superuser) قابل تغییرند؛
+        # خود کاربر نمی‌تواند برای خودش نقش/دسترسی بسازد یا حسابش را غیرفعال کند.
+        read_only_fields = [
+            "id", "is_staff", "is_superuser", "is_active",
+            "is_student", "is_instructor",
+            "groups", "group_names", "permissions", "date_joined",
+        ]
+
+    def get_group_names(self, obj):
+        return list(obj.groups.values_list("name", flat=True))
 
     def get_permissions(self, obj):
         if obj.is_superuser:

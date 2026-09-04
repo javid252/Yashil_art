@@ -16,9 +16,10 @@ class Enrollment(models.Model):
         SINGLE = "single", "تک دوره"
         SUBSCRIPTION = "subscription", "اشتراک ماهانه"
 
+    # db_constraint=False: رابطه بین‌دیتابیسی با کاربر (دیتابیس default)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="دانشجو", related_name="enrollments",
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE, db_constraint=False,
     )
     course = models.ForeignKey(
         "courses.Course", verbose_name="دوره", related_name="enrollments",

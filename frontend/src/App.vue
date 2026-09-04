@@ -26,7 +26,8 @@ export default {
   },
   computed: {
     isBareLayout() {
-      return this.$route.path.startsWith("/admin") || this.$route.path.startsWith("/vendor");
+      const p = this.$route.path;
+      return p.startsWith("/admin") || p.startsWith("/vendor") || p.startsWith("/student") || p.startsWith("/instructor");
     },
   },
   created() {

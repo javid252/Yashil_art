@@ -48,7 +48,9 @@
 
             <transition name="dropdown">
               <div v-if="menuOpen" class="user-dropdown" @click="menuOpen = false">
-                <router-link to="/my-courses">📚 پنل دانشجو</router-link>
+                <router-link v-if="isInstructor" to="/instructor">👨‍🏫 پنل استاد</router-link>
+                <router-link v-if="isStudent" to="/student">🎓 پنل دانشجو</router-link>
+                <router-link to="/my-courses">📚 دوره‌های من</router-link>
                 <router-link to="/my-orders">📋 سفارش‌های من</router-link>
                 <router-link to="/my-invoices">🧾 فاکتورهای من</router-link>
                 <router-link v-if="isApprovedVendor" to="/vendor">🏪 پنل فروشنده</router-link>
@@ -80,7 +82,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("auth", ["isAuthenticated", "isAdmin", "currentUser"]),
+    ...mapGetters("auth", ["isAuthenticated", "isAdmin", "isStudent", "isInstructor", "currentUser"]),
     ...mapGetters("cart", ["itemCount"]),
     ...mapGetters("platform", ["multivendorEnabled"]),
     ...mapGetters("vendor", ["isVendor", "isApprovedVendor"]),

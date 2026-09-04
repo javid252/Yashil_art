@@ -2,7 +2,7 @@
   <div class="admin-page">
     <div class="page-header">
       <h1>🎪 مدیریت کارگاه‌ها</h1>
-      <button class="btn btn-primary" @click="showForm = true">+ کارگاه جدید</button>
+      <router-link to="/admin/workshops-admin/new" class="btn btn-primary">+ کارگاه جدید</router-link>
     </div>
 
     <div class="table-wrapper">
@@ -32,8 +32,9 @@
             <td>
               <span class="status-badge" :class="`ws-${ws.status}`">{{ ws.status_display }}</span>
             </td>
-            <td>
-              <button class="btn-sm btn-outline">ویرایش</button>
+            <td class="actions-cell">
+              <router-link :to="`/admin/workshops-admin/${ws.id}/edit`" class="btn-sm btn-outline">ویرایش</router-link>
+              <button class="btn-sm btn-danger" @click="removeWorkshop(ws)">حذف</button>
             </td>
           </tr>
         </tbody>
@@ -48,9 +49,19 @@
 import api from "@/services/api";
 export default {
   name: "AdminWorkshops",
-  data() { return { workshops: [], showForm: false }; },
+  data() { return { workshops: [] }; },
   methods: {
     formatPrice(p) { return p ? new Intl.NumberFormat("fa-IR").format(p) : "0"; },
+    async removeWorkshop(ws) {
+      if (!confirm(`کارگاه «${ws.title}» حذف شود؟`)) return;
+      try {
+        await api.delete(`/workshops/${ws.id}/`);
+        this.$store.dispatch("notify", { message: "کارگاه حذف شد." });
+        this.loadWorkshops();
+      } catch (e) {
+        this.$store.dispatch("notify", { message: "حذف کارگاه ناموفق بود.", type: "error" });
+      }
+    },
     async loadWorkshops() {
       try { const { data } = await api.get("/workshops/"); this.workshops = data.results || data; } catch (e) {}
     },
@@ -72,8 +83,11 @@ export default {
 .ws-ongoing { background: #d4edda; color: #155724; }
 .ws-completed { background: #e2e3e5; color: #383d41; }
 .ws-cancelled { background: #f8d7da; color: #721c24; }
-.btn-sm { padding: 4px 12px; font-size: 0.8rem; }
+.btn-sm { padding: 4px 12px; font-size: 0.8rem; text-decoration: none; display: inline-block; }
 .btn-outline { border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; }
+.btn-danger { border: 1px solid #f5c6cb; background: #fef2f2; color: #b91c1c; border-radius: 4px; cursor: pointer; }
+.btn-danger:hover { background: #fee2e2; }
+.actions-cell { display: flex; gap: 8px; align-items: center; }
 .btn-primary { background: #6c5ce7; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; }
 .empty { text-align: center; padding: 40px; color: #999; }
 </style>
